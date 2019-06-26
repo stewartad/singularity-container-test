@@ -1,0 +1,50 @@
+BootStrap: localimage
+From: singularity.sif
+
+%post
+    export HOME=/
+    export GOPATH=${HOME}/go
+    export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin
+
+    # install singolang
+    go get github.com/stewartad/singolang
+
+    # get container test framework source code
+    mkdir -p $GOPATH/src/github.com/GoogleContainerTools
+    cd $GOPATH/src/github.com/GoogleContainerTools
+    git clone https://github.com/stewartad/container-structure-test.git
+
+    # compile it and move it to a place we can run it
+    cd container-structure-test
+    make
+    chmod +x ./out/container-structure-test-linux-amd64
+    mv ./out/container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+
+%test
+    export HOME=/
+    export GOPATH=${HOME}/go
+    export PATH=/usr/local/go/bin:${PATH}
+
+    # test if container test source exists
+    stat ${GOPATH}/src/github.com/GoogleContainerTools/container-structure-test > /dev/null
+    if [ $? -eq 0 ]; then
+        echo "container-structure-test cloned properly"
+    else   
+        echo "Cannot find container-structure-test"
+    fi
+
+    # test if singolang source exists
+    stat ${GOPATH}/src/github.com/stewartad/singolang > /dev/null
+    if [ $? -eq 0 ]; then
+        echo "singolang cloned properly"
+    else   
+        echo "Cannot find singolang"
+    fi
+
+    # test if container-structure-test properly built and copied
+    container-structure-test version | grep -q 1.8
+    if [ $? -eq 0 ]; then
+        echo "container-structure-test installed"
+    else
+        echo "container-structure-test not installed"
+    fi
