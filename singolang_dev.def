@@ -1,0 +1,86 @@
+BootStrap: library
+From: ubuntu:18.04
+
+%environment
+    export PATH=$PATH:/usr/local/go/bin
+    export GOPATH=/go
+
+%post
+    export HOME=/
+    export GOPATH=${HOME}/go
+    export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin
+
+    apt-get -y update && apt-get -y install \
+    build-essential \
+    libssl-dev \
+    uuid-dev \
+    libgpgme11-dev \
+    squashfs-tools \
+    wget \
+    git
+
+    # Get golang
+    wget https://dl.google.com/go/go1.12.6.linux-amd64.tar.gz
+    tar -C /usr/local -xzf go1.12.6.linux-amd64.tar.gz
+
+    # Get singularity
+    mkdir -p $GOPATH/src/github.com/sylabs && \
+    cd $GOPATH/src/github.com/sylabs && \
+    export VERSION=3.2.1 && \
+    wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-${VERSION}.tar.gz && \
+    tar -xzf singularity-${VERSION}.tar.gz && \
+    cd singularity && \
+    ./mconfig && \
+    make -C builddir  && \
+    make -C builddir install
+
+    # install singolang
+    go get github.com/stewartad/singolang
+
+    # get container test framework source code
+    mkdir -p $GOPATH/src/github.com/GoogleContainerTools
+    cd $GOPATH/src/github.com/GoogleContainerTools
+    git clone https://github.com/stewartad/container-structure-test.git
+
+    # compile it and move it to a place we can run it
+    cd container-structure-test
+    make
+    chmod +x ./out/container-structure-test-linux-amd64
+    mv ./out/container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+
+%runscript
+    cd $GOPATH/src/github.com/stewartad/singolang && \
+    git pull
+
+    cd $GOPATH/src/github.com/GoogleContainerTools/container-structure-test && \
+    git pull
+
+%test
+    export HOME=/
+    export GOPATH=${HOME}/go
+    export PATH=/usr/local/go/bin:${PATH}
+    go version | grep -q go1.12
+    if [ $? -eq 0 ]; then
+        echo "Correct Go Version Installed"
+    else
+        echo "Incorrect Go Version Found"
+    fi
+    singularity version | grep -q 3.2.1
+    if [ $? -eq 0 ]; then
+        echo "Correct Singularity Version Installed"
+    else
+        echo "Incorrect Singularity Version Found"
+    fi
+
+    stat ${GOPATH}/src/github.com/GoogleContainerTools/container-structure-test > /dev/null
+    if [ $? -eq 0 ]; then
+        echo "container-structure-test cloned properly"
+    else   
+        echo "Cannot find container-structure-test"
+    fi
+    stat ${GOPATH}/src/github.com/stewartad/singolang > /dev/null
+    if [ $? -eq 0 ]; then
+        echo "singolang cloned properly"
+    else   
+        echo "Cannot find singolang"
+    fi

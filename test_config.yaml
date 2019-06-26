@@ -1,0 +1,22 @@
+schemaVersion: '2.0.0'
+# globalEnvVars:
+#   - key: "VIRTUAL_ENV"
+#     value: "/env"
+#   - key: "PATH"
+#     value: "/env/bin:$PATH"
+
+commandTests:
+  - name: "echo something"
+    command: "echo"
+    args: ["hello world"]
+    expectedOutput: ["hello world"]
+
+  - name: "os version"
+    command: "cat"
+    args: ["/etc/os-release"]
+    expectedOutput: [".*Ubuntu 16.04.*"]
+
+  - name: "lolcow"
+    command: "bash"
+    args: ["-c", "echo The Requiem Quietly Plays | cowsay | lolcat"]
+    expectedOutput: [".*The Requiem Quietly Plays"]
