@@ -20,3 +20,18 @@ commandTests:
     command: "bash"
     args: ["-c", "echo The Requiem Quietly Plays | cowsay | lolcat"]
     expectedOutput: [".*The Requiem Quietly Plays"]
+
+fileExistenceTests:
+  - name: "cowsay"
+    path: "/usr/games/cowsay"
+    shouldExist: true
+
+  - name: "games"
+    path: "/usr/games"
+    shouldExist: true
+
+fileContentTests:
+  - name: "aaa"
+    path: "/vol_b/devcontainer/aaa"
+    expectedContents: [".*requiem.*"]
+    excludedContents: [".*giorno.*"]

@@ -7,7 +7,11 @@ From: singularity.sif
     export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin
 
     # install singolang
-    go get github.com/stewartad/singolang
+    mkdir -p $GOPATH/src/github.com/stewartad
+    cd $GOPATH/src/github.com/stewartad
+    git clone https://github.com/stewartad/singolang.git
+    cd singolang
+    git checkout dev
 
     # get container test framework source code
     mkdir -p $GOPATH/src/github.com/GoogleContainerTools
@@ -16,6 +20,8 @@ From: singularity.sif
 
     # compile it and move it to a place we can run it
     cd container-structure-test
+    git checkout dev
+
     make
     chmod +x ./out/container-structure-test-linux-amd64
     mv ./out/container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
