@@ -1,0 +1,1 @@
+singularity build -F singularity_testenv.sif singularity_testenv.def
