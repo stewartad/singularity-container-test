@@ -1,4 +1,5 @@
 schemaVersion: '2.0.0'
+# The driver does not support env vars yet
 # globalEnvVars:
 #   - key: "VIRTUAL_ENV"
 #     value: "/env"
@@ -18,8 +19,8 @@ commandTests:
 
   - name: "lolcow"
     command: "bash"
-    args: ["-c", "echo The Requiem Quietly Plays | cowsay | lolcat"]
-    expectedOutput: [".*The Requiem Quietly Plays"]
+    args: ["-c", "fortune | cowsay | lolcat"]
+    expectedOutput: [".*_________"]
 
 fileExistenceTests:
   - name: "cowsay"
@@ -30,8 +31,12 @@ fileExistenceTests:
     path: "/usr/games"
     shouldExist: true
 
+  - name: "launchcodes"
+    path: "/launchcodes.txt"
+    shouldExist: false
+
 fileContentTests:
   - name: "aaa"
-    path: "/vol_b/devcontainer/aaa"
-    expectedContents: [".*requiem.*"]
+    path: "aaa"
+    expectedContents: [".*but it do.*"]
     excludedContents: [".*giorno.*"]

@@ -3,7 +3,7 @@ From: singularity.sif
 
 %post
     export HOME=/
-    export GOPATH=${HOME}/go
+    export GOPATH=/go
     export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin
 
     # install singolang
@@ -26,9 +26,17 @@ From: singularity.sif
     chmod +x ./out/container-structure-test-linux-amd64
     mv ./out/container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
 
+%runscript
+    echo "image: $1"
+    echo "config: $2"
+    if [ ! -f "$1" -a ! -f "$2" ]; then
+        echo "Files not found"
+        exit 1
+    fi
+    container-structure-test test --driver singularity --image $1 --config $2
+
 %test
-    export HOME=/
-    export GOPATH=${HOME}/go
+    export GOPATH=/go
     export PATH=/usr/local/go/bin:${PATH}
 
     # test if container test source exists
