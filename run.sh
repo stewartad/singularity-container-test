@@ -1,4 +1,8 @@
-echo "they don't think it be like it is, but it do" >aaa
+#!/bin/bash
+# ---MUST BE RUN WITH SUDO---
+echo "hello world" >aaa
 
-singularity pull docker://godlovedc/lolcow
-singularity run singularity_testenv.sif lolcow_latest.sif test_config.yaml
+singularity pull docker://godlovedc/lolcow 2>/dev/null
+singularity run singularity_test_container.sif lolcow_latest.sif test_config.yaml
+
+rm aaa

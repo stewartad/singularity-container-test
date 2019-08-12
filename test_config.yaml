@@ -1,10 +1,8 @@
 schemaVersion: '2.0.0'
-# The driver does not support env vars yet
-# globalEnvVars:
-#   - key: "VIRTUAL_ENV"
-#     value: "/env"
-#   - key: "PATH"
-#     value: "/env/bin:$PATH"
+
+globalEnvVars:
+   - key: "HELLO"
+     value: "world"
 
 commandTests:
   - name: "echo something"
@@ -22,6 +20,14 @@ commandTests:
     args: ["-c", "fortune | cowsay | lolcat"]
     expectedOutput: [".*_________"]
 
+  - name: "environment"
+    command: "env"
+    args: []
+    envVars:
+        - key: "GOODBYE"
+          value: "world"
+    expectedOutput: [".*HELLO=world.*", ".*GOODBYE=world.*"]
+
 fileExistenceTests:
   - name: "cowsay"
     path: "/usr/games/cowsay"
@@ -38,5 +44,13 @@ fileExistenceTests:
 fileContentTests:
   - name: "aaa"
     path: "aaa"
-    expectedContents: [".*but it do.*"]
-    excludedContents: [".*giorno.*"]
+    expectedContents: [".*hello.*"]
+    excludedContents: [".*goodbye.*"]
+
+metadataTest:
+  env:
+    - key: "SINGULARITY_NAME"
+      value: "lolcow_latest.sif"
+  labels:
+    - key: 'org.label-schema.usage.singularity.version'
+      value: "3.2.1"
