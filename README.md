@@ -12,7 +12,7 @@ This testing system is part of a larger autonomous build system project in the U
 
 ## Usage
 
-To run the tests, first clone the repository. There are currently two tests. Each test has a definition file named `def_[name].def`, a config file named `config_[name].yaml`, and a testfile named `testfile_[name]`. There are also build and run scripts named `build_[name].sh` and `run_[name].sh`, repsectively. These files contain the commands detailed below.
+To run the tests, first clone the repository. There are currently two tests. One is a trivial container called [lolcow](https://hub.docker.com/r/godlovedc/lolcow/dockerfile), and the other is a container with the entire SciPy stack inside. Each test has a definition file named `def_[name].def`, a config file named `config_[name].yaml`, and a testfile named `testfile_[name]`. There are also build and run scripts named `build_[name].sh` and `run_[name].sh`, repsectively. These files contain the commands detailed below.
 
 Each test will require you to first build the container. For example, to build the lolcow test, use the following command.
 
