@@ -1,0 +1,56 @@
+schemaVersion: '2.0.0'
+
+globalEnvVars:
+   - key: "HELLO"
+     value: "world"
+
+commandTests:
+  - name: "echo something"
+    command: "echo"
+    args: ["hello world"]
+    expectedOutput: ["hello world"]
+
+  - name: "os version"
+    command: "cat"
+    args: ["/etc/os-release"]
+    expectedOutput: [".*Ubuntu 16.04.*"]
+
+  - name: "lolcow"
+    command: "bash"
+    args: ["-c", "fortune | cowsay | lolcat"]
+    expectedOutput: [".*_________"]
+
+  - name: "environment"
+    command: "env"
+    args: []
+    envVars:
+        - key: "GOODBYE"
+          value: "world"
+    expectedOutput: [".*HELLO=world.*", ".*GOODBYE=world.*"]
+
+fileExistenceTests:
+  - name: "cowsay"
+    path: "/usr/games/cowsay"
+    shouldExist: true
+
+  - name: "games"
+    path: "/usr/games"
+    shouldExist: true
+
+  - name: "launchcodes"
+    path: "/launchcodes.txt"
+    shouldExist: false
+
+fileContentTests:
+  - name: "testfile_lolcow"
+    path: "testfile_lolcow"
+    expectedContents: [".*hello.*"]
+    excludedContents: [".*goodbye.*"]
+
+metadataTest:
+  env:
+    - key: "SINGULARITY_NAME"
+      value: "image_lolcow.sif"
+  labels:
+    - key: 'org.label-schema.usage.singularity.version'
+      value: "3.2.1"

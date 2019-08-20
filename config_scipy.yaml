@@ -1,0 +1,17 @@
+schemaVersion: '2.0.0'
+
+commandTests:
+  - name: "python script"
+    command: "python"
+    args: ["testfile_scipy.py"]
+    expectedOutput: [""]
+
+fileExistenceTests:
+  - name: "plot"
+    path: "plot.png"
+    shouldExist: true
+
+metadataTest:
+  env:
+    - key: "SINGULARITY_NAME"
+      value: "image_scipy_stack.sif"

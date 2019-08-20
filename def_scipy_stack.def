@@ -1,0 +1,7 @@
+BootStrap: docker
+From: python:3-slim
+
+%environment
+    export PATH=$PATH:/.local/bin
+%post
+    pip install numpy scipy matplotlib ipython jupyter pandas sympy nose
